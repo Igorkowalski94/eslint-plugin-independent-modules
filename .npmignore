@@ -1,6 +1,6 @@
 *
 !dist/*
-!projectStructure.schema.json
+!independentModules.schema.json
 !package.json
 !README.md
 !LICENCE
