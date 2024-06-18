@@ -6,7 +6,7 @@ build({
     entryPoints: ["src/index.ts"],
     outfile: "dist/index.js",
     bundle: true,
-    minify: true,
+    minify: false,
     treeShaking: true,
     plugins: [nodeExternalsPlugin()],
 }).catch(() => process.exit(1));

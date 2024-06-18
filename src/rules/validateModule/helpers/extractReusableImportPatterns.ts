@@ -4,14 +4,15 @@ export const extractReusableImportPatterns = (
     patterns: Pattern[],
     config: Config,
 ): Pattern[] =>
-    patterns
-        .map((pattern) => {
-            if (Array.isArray(pattern)) return pattern;
+    patterns.slice().reduce<Pattern[]>((acc, pattern) => {
+        if (Array.isArray(pattern)) return [...acc, pattern];
 
-            const reusableImportPatternKey = pattern.match(/^\{(.*)\}$/)?.[1];
+        const reusableImportPatternKey = pattern.match(/^\{(.*)\}$/)?.[1];
 
-            if (!reusableImportPatternKey) return pattern;
+        if (!reusableImportPatternKey) return [...acc, pattern];
 
-            return config.reusableImportPatterns[reusableImportPatternKey];
-        })
-        .flat();
+        return [
+            ...acc,
+            ...config.reusableImportPatterns[reusableImportPatternKey],
+        ];
+    }, []);
