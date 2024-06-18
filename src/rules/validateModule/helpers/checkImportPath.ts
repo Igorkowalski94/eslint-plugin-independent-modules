@@ -39,12 +39,10 @@ export const checkImportPath = ({
 
     const isExternal = isExternalImport(importPath, cwd);
 
-    if (
-        isExternal &&
-        allowExternalImports === false &&
-        !allowImportsFromExtracted.includes(importPath)
-    )
+    if (isExternal && allowExternalImports === false)
         throw getExternalImportError(moduleName, errorMessage);
+
+    if (isExternal && allowImportsFromExtracted.includes(importPath)) return;
 
     const modulePath = getModulePath(filename);
     const familyPath = getFamilyPath(importPath, filename);
