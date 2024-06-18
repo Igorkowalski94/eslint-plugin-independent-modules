@@ -32,15 +32,19 @@ export const checkImportPath = ({
         errorMessage,
     } = moduleConfig;
 
-    const isExternal = isExternalImport(importPath, cwd);
-
-    if (isExternal && allowExternalImports === false)
-        throw getExternalImportError(moduleName, errorMessage);
-
     const allowImportsFromExtracted = extractReusableImportPatterns(
         allowImportsFrom,
         config,
     );
+
+    const isExternal = isExternalImport(importPath, cwd);
+
+    if (
+        isExternal &&
+        allowExternalImports === false &&
+        !allowImportsFromExtracted.includes(importPath)
+    )
+        throw getExternalImportError(moduleName, errorMessage);
 
     const modulePath = getModulePath(filename);
     const familyPath = getFamilyPath(importPath, filename);
