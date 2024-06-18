@@ -1,0 +1,6 @@
+*
+!dist/*
+!projectStructure.schema.json
+!package.json
+!README.md
+!LICENCE
