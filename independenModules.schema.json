@@ -1,0 +1,84 @@
+{
+    "$ref": "#/definitions/Config",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "Pattern": {
+            "anyOf": [
+                {
+                    "type": "string",
+                    "default": ""
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "default": ""
+                    },
+                    "default": []
+                }
+            ]
+        },
+        "Module": {
+            "type": "object",
+
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "default": ""
+                },
+                "pattern": {
+                    "$ref": "#/definitions/Pattern",
+                    "default": ""
+                },
+                "errorMessage": {
+                    "type": "string",
+                    "default": ""
+                },
+                "allowImportsFrom": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Pattern"
+                    },
+                    "default": []
+                },
+                "allowExternalImports": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "default": {
+                "name": "",
+                "pattern": "",
+                "allowImportsFrom": []
+            },
+            "required": ["name", "pattern", "allowImportsFrom"]
+        },
+        "Config": {
+            "type": "object",
+            "properties": {
+                "root": {
+                    "type": "string",
+                    "default": "src"
+                },
+                "reusableImportPatterns": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Pattern"
+                        }
+                    },
+                    "default": {}
+                },
+                "modules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Module"
+                    },
+                    "default": []
+                }
+            },
+            "required": ["reusableImportPatterns", "modules"]
+        }
+    }
+}
