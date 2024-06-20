@@ -1,7 +1,5 @@
 import { extractReusableImportPatterns } from "./extractReusableImportPatterns";
 import { findModuleConfig } from "./findModuleConfig";
-import { getFamilyPath } from "./getFamilyPath";
-import { getModulePath } from "./getModulePath";
 import { isExternalImport } from "./isExternalImport";
 import { validateImportPath } from "./validateImportPath";
 import { getExternalImportError } from "../errors/getExternalImportError";
@@ -49,14 +47,10 @@ export const checkImportPath = ({
         throw getExternalImportError(moduleName, errorMessage);
     }
 
-    const modulePath = getModulePath(filename);
-    const familyPath = getFamilyPath(importPath, filename);
-
     const isValidImportPath = validateImportPath({
         allowImportsFrom: allowImportsFromExtracted,
         importPath,
-        modulePath,
-        familyPath,
+        filename,
     });
 
     if (isValidImportPath) return;

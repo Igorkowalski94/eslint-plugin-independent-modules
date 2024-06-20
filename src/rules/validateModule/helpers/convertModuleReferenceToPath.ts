@@ -1,21 +1,31 @@
-import { FAMILY_REFERENCE, MODULE_REFERENCE } from "../validateModule.consts";
+import { getDirnamePath } from "./getDirnamePath";
+import { getFamilyPath } from "./getFamilyPath";
+import { FAMILY_REGEX, DIRNAME_REGEX } from "../validateModule.consts";
 import { Pattern } from "../validateModule.types";
 
 interface ConvertModuleReferenceToPathProps {
     pattern: Pattern;
-    modulePath: string;
-    familyPath: string;
+    importPath: string;
+    filename: string;
 }
 
 export const convertModuleReferenceToPath = ({
-    familyPath,
-    modulePath,
+    importPath,
     pattern,
+    filename,
 }: ConvertModuleReferenceToPathProps): Pattern =>
     Array.isArray(pattern)
         ? pattern
-              .map((p) => p.replace(MODULE_REFERENCE, modulePath))
-              .map((p) => p.replace(FAMILY_REFERENCE, familyPath))
+              .map((p) => p.replace(DIRNAME_REGEX, getDirnamePath(filename, p)))
+              .map((p) =>
+                  p.replace(
+                      FAMILY_REGEX,
+                      getFamilyPath({ importPath, filename, pattern: p }),
+                  ),
+              )
         : pattern
-              .replace(MODULE_REFERENCE, modulePath)
-              .replace(FAMILY_REFERENCE, familyPath);
+              .replace(DIRNAME_REGEX, getDirnamePath(filename, pattern))
+              .replace(
+                  FAMILY_REGEX,
+                  getFamilyPath({ importPath, filename, pattern }),
+              );

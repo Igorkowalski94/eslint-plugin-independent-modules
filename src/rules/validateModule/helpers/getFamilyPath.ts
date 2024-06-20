@@ -1,4 +1,18 @@
-export const getFamilyPath = (importPath: string, filename: string): string => {
+import { getLvlFromPattern } from "./getLvlFromPattern";
+
+interface GetFamilyPathProps {
+    importPath: string;
+    filename: string;
+    pattern: string;
+}
+
+export const getFamilyPath = ({
+    filename,
+    importPath,
+    pattern,
+}: GetFamilyPathProps): string => {
+    const lvl = getLvlFromPattern(pattern, 2);
+
     const importPathParts = importPath.split("/");
     const filenameParts = filename.split("/");
 
@@ -13,6 +27,8 @@ export const getFamilyPath = (importPath: string, filename: string): string => {
 
         familyParts.push(importPathParts[i]);
     }
+
+    if (familyParts.length < lvl) return importPath;
 
     return familyParts.join("/");
 };

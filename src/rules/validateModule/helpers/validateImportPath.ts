@@ -6,21 +6,19 @@ import { Pattern } from "../validateModule.types";
 interface ValidateImportPathProps {
     allowImportsFrom: Pattern[];
     importPath: string;
-    modulePath: string;
-    familyPath: string;
+    filename: string;
 }
 
 export const validateImportPath = ({
     allowImportsFrom,
     importPath,
-    modulePath,
-    familyPath,
+    filename,
 }: ValidateImportPathProps): boolean =>
     allowImportsFrom.some((pattern) => {
         const newPattern = convertModuleReferenceToPath({
             pattern,
-            modulePath,
-            familyPath,
+            importPath,
+            filename,
         });
 
         return micromatch.every(importPath, newPattern);
