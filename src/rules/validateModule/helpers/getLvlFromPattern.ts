@@ -1,8 +1,14 @@
+import { extractReferencesFromPattern } from "./extractReferencesFromPattern";
+
 export const getLvlFromPattern = (
     pattern: string,
     defaultLvl: number,
 ): number => {
-    const patternElements = pattern.split("_");
+    const extractedReference = extractReferencesFromPattern(pattern);
+
+    if (!extractedReference) return defaultLvl;
+
+    const patternElements = extractedReference.split("_");
 
     if (patternElements.length === 1) return defaultLvl;
 
