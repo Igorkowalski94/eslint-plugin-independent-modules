@@ -1,7 +1,7 @@
 {
     "author": "Igor Kowalski (Igorkowalski94)",
     "name": "eslint-plugin-independent-modules",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "license": "MIT",
     "description": "Eslint plugin that allows you to create independent modules.",
     "keywords": [

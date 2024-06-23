@@ -1,5 +1,6 @@
 import fs from "fs";
 
+import { convertToSystemSep } from "./convertToSystemSep";
 import { FILE_EXTENSIONS } from "../validateModule.consts";
 import { Config } from "../validateModule.types";
 
@@ -22,7 +23,9 @@ export const addExtensionToImportPath = ({
 
     if (isImportPathWithExtension) return importPath;
 
-    const fullImportPath = cwdWithRoot + importPath;
+    const importPathWithSystemSep = convertToSystemSep(importPath);
+
+    const fullImportPath = cwdWithRoot + importPathWithSystemSep;
 
     let foundExtension = "";
 
