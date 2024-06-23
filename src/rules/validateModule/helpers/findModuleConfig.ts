@@ -4,6 +4,6 @@ import { Config, Module } from "../validateModule.types";
 
 export const findModuleConfig = (
     fileName: string,
-    config: Config,
+    modules: Config["modules"],
 ): Module | undefined =>
-    config.modules.find(({ pattern }) => micromatch.isMatch(fileName, pattern));
+    modules.find(({ pattern }) => micromatch.isMatch(fileName, pattern));

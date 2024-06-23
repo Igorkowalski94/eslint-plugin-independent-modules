@@ -1,4 +1,5 @@
 import { getLvlFromPattern } from "./getLvlFromPattern";
+import { NO_FAMILY } from "../validateModule.consts";
 
 interface GetFamilyPathProps {
     importPath: string;
@@ -15,7 +16,6 @@ export const getFamilyPath = ({
 
     const importPathParts = importPath.split("/");
     const filenameParts = filename.split("/");
-
     const familyParts = [];
 
     for (
@@ -28,7 +28,7 @@ export const getFamilyPath = ({
         familyParts.push(importPathParts[i]);
     }
 
-    if (familyParts.length < lvl) return importPath;
+    if (familyParts.length < lvl) return NO_FAMILY;
 
     return familyParts.join("/");
 };

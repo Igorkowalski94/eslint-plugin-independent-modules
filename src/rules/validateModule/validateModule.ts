@@ -1,10 +1,8 @@
-import { sep } from "path";
-
 import { ESLintUtils } from "@typescript-eslint/utils";
-import { ReportDescriptor } from "@typescript-eslint/utils/dist/ts-eslint/Rule";
 
-import { finalErrorGuard } from "./errors/FinalError/helpers/finalErrorGuard";
-import { validateAll } from "./helpers/validateAll";
+import { handleCallExpression } from "./helpers/handleCallExpression";
+import { handleExportNamedDeclaration } from "./helpers/handleExportNamedDeclaration";
+import { validateImport } from "./helpers/validateImport";
 
 export const validateModule = ESLintUtils.RuleCreator(
     () =>
@@ -15,37 +13,25 @@ export const validateModule = ESLintUtils.RuleCreator(
         docs: {
             description: "Force independent modules",
         },
-        type: "suggestion",
+        type: "problem",
         schema: [],
-        messages: {
-            error: `error`,
-        },
+        messages: {},
     },
     defaultOptions: [],
     create(context) {
         return {
             ImportDeclaration(node): void {
-                const importPath = node.source.value;
-                const configPath = `${context.cwd}${sep}${
-                    context.settings["independent-modules/config-path"]
-                }`;
-                const { filename, cwd } = context;
-
-                try {
-                    validateAll({
-                        filename,
-                        importPath,
-                        cwd,
-                        configPath,
-                    });
-                } catch (error) {
-                    if (!finalErrorGuard(error)) return;
-
-                    context.report({
-                        node,
-                        message: error.message,
-                    } as unknown as ReportDescriptor<"error">);
-                }
+                validateImport({
+                    importPath: node.source.value,
+                    context,
+                    node,
+                });
+            },
+            ExportNamedDeclaration(node): void {
+                handleExportNamedDeclaration(node, context);
+            },
+            CallExpression(node): void {
+                handleCallExpression(node, context);
             },
         };
     },

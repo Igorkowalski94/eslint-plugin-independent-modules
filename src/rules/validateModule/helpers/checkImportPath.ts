@@ -16,10 +16,10 @@ interface CheckImportPathProps {
 export const checkImportPath = ({
     importPath,
     filename,
-    config,
+    config: { reusableImportPatterns, modules },
     cwd,
 }: CheckImportPathProps): void => {
-    const moduleConfig = findModuleConfig(filename, config);
+    const moduleConfig = findModuleConfig(filename, modules);
 
     if (!moduleConfig) return;
 
@@ -32,7 +32,7 @@ export const checkImportPath = ({
 
     const allowImportsFromExtracted = extractReusableImportPatterns(
         allowImportsFrom,
-        config,
+        reusableImportPatterns,
     );
 
     const isExternal = isExternalImport(importPath, cwd);

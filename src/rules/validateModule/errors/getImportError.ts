@@ -1,4 +1,4 @@
-import { FinalError } from "./FinalError/FinalError";
+import { FinalError } from "./FinalError";
 
 export const getImportError = (
     moduleName: string,
@@ -6,5 +6,5 @@ export const getImportError = (
 ): FinalError =>
     new FinalError(
         customError ??
-            `🔥 This import is not allowed in the module '${moduleName}'`,
+            `🔥 This import is not allowed in the module '${moduleName}'. 🔥`,
     );

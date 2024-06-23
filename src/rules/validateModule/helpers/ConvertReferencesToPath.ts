@@ -3,17 +3,17 @@ import { getFamilyPath } from "./getFamilyPath";
 import { FAMILY_REGEX, DIRNAME_REGEX } from "../validateModule.consts";
 import { Pattern } from "../validateModule.types";
 
-interface ConvertModuleReferenceToPathProps {
+interface ConvertReferencesToPathProps {
     pattern: Pattern;
     importPath: string;
     filename: string;
 }
 
-export const convertModuleReferenceToPath = ({
+export const convertReferencesToPath = ({
     importPath,
     pattern,
     filename,
-}: ConvertModuleReferenceToPathProps): Pattern =>
+}: ConvertReferencesToPathProps): Pattern =>
     Array.isArray(pattern)
         ? pattern
               .map((p) => p.replace(DIRNAME_REGEX, getDirnamePath(filename, p)))

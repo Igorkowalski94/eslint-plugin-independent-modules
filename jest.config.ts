@@ -18,11 +18,9 @@ const jestConfig: JestConfigWithTsJest = {
     coverageReporters: ["text", "lcov"],
     coverageThreshold: {
         global: {
-            // TODO change to 100 after PR with all tests
-            branches: 0,
+            branches: 100,
         },
     },
-    coveragePathIgnorePatterns: ["src/rules"],
 };
 
 export default jestConfig;

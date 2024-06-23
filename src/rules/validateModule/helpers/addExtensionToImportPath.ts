@@ -1,17 +1,22 @@
 import fs from "fs";
 
 import { FILE_EXTENSIONS } from "../validateModule.consts";
+import { Config } from "../validateModule.types";
 
 interface AddExtensionToImportPathProps {
     importPath: string;
     cwdWithRoot: string;
+    extensions: Config["extensions"];
 }
 
 export const addExtensionToImportPath = ({
     importPath,
     cwdWithRoot,
+    extensions = [],
 }: AddExtensionToImportPathProps): string => {
-    const isImportPathWithExtension = FILE_EXTENSIONS.some((extension) =>
+    const allExtensions = [...FILE_EXTENSIONS, ...extensions];
+
+    const isImportPathWithExtension = allExtensions.some((extension) =>
         importPath.endsWith(extension),
     );
 
@@ -21,7 +26,7 @@ export const addExtensionToImportPath = ({
 
     let foundExtension = "";
 
-    for (const extension of FILE_EXTENSIONS) {
+    for (const extension of allExtensions) {
         if (fs.existsSync(fullImportPath + extension)) {
             foundExtension = extension;
             break;

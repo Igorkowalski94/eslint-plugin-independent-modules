@@ -1,6 +1,6 @@
 import micromatch from "micromatch";
 
-import { convertModuleReferenceToPath } from "./convertModuleReferenceToPath";
+import { convertReferencesToPath } from "./ConvertReferencesToPath";
 import { Pattern } from "../validateModule.types";
 
 interface ValidateImportPathProps {
@@ -15,7 +15,7 @@ export const validateImportPath = ({
     filename,
 }: ValidateImportPathProps): boolean =>
     allowImportsFrom.some((pattern) => {
-        const newPattern = convertModuleReferenceToPath({
+        const newPattern = convertReferencesToPath({
             pattern,
             importPath,
             filename,

@@ -1,9 +1,9 @@
-import { sep } from "path";
-
 import { addExtensionToImportPath } from "./addExtensionToImportPath";
 import { checkImportPath } from "./checkImportPath";
 import { convertImportPathToNonRelative } from "./convertImportPathToNonRelative";
+import { getCwdWithRoot } from "./getCwdWithRoot";
 import { readConfigFile } from "./readConfigFile";
+import { removeCwdWithRootAndUnifySep } from "./removeCwdWithRootAndUnifySep";
 import { getInvalidConfigFileError } from "../errors/getInvalidConfigFileError";
 
 interface ValidateAllProps {
@@ -24,20 +24,17 @@ export const validateAll = ({
     if (!config || typeof config !== "object" || Array.isArray(config))
         throw getInvalidConfigFileError(configPath);
 
-    const currentRoot = config?.root ?? "src";
+    const { extensions, root } = config;
 
-    const cwdWithRoot = `${cwd}${sep}${currentRoot}${sep}`;
+    const cwdWithRoot = getCwdWithRoot(cwd, root);
 
-    const filenameWithoutCwdWithRoot = filename
-        .replace(cwdWithRoot, "")
-        .replace(/\\/g, "/");
-
-    const newImportPath = importPath
-        .replace(cwdWithRoot, "")
-        .replace(/\\/g, "/");
+    const filenameWithoutCwdWithRoot = removeCwdWithRootAndUnifySep(
+        filename,
+        cwdWithRoot,
+    );
 
     const importPathNonRelative = convertImportPathToNonRelative({
-        importPath: newImportPath,
+        importPath,
         filename,
         cwdWithRoot,
     });
@@ -45,6 +42,7 @@ export const validateAll = ({
     const importPathWithExtension = addExtensionToImportPath({
         importPath: importPathNonRelative,
         cwdWithRoot,
+        extensions,
     });
 
     checkImportPath({

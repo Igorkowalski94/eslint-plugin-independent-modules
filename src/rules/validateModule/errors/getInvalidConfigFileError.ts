@@ -1,4 +1,4 @@
-import { FinalError } from "./FinalError/FinalError";
+import { FinalError } from "./FinalError";
 
 export const getInvalidConfigFileError = (configPath: string): Error =>
-    new FinalError(`🔥 Invalid configuration file '${configPath}' 🔥`);
+    new FinalError(`🔥 Invalid configuration file '${configPath}'. 🔥`);

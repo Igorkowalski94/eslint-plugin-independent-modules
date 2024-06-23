@@ -20,7 +20,7 @@
         },
         "Module": {
             "type": "object",
-
+            "additionalProperties": false,
             "properties": {
                 "name": {
                     "type": "string",
@@ -55,10 +55,26 @@
         },
         "Config": {
             "type": "object",
+            "additionalProperties": false,
             "properties": {
+                "extensions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "default": ""
+                    }
+                },
                 "root": {
-                    "type": "string",
-                    "default": "src"
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "default": "src"
+                        },
+                        {
+                            "type": "null",
+                            "default": null
+                        }
+                    ]
                 },
                 "reusableImportPatterns": {
                     "type": "object",
@@ -78,7 +94,7 @@
                     "default": []
                 }
             },
-            "required": ["reusableImportPatterns", "modules"]
+            "required": ["modules"]
         }
     }
 }
