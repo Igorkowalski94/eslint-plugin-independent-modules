@@ -1,4 +1,4 @@
-import { convertReferencesToPath } from "./CconvertReferencesToPath";
+import { convertReferencesToPath } from "./convertReferencesToPath";
 
 describe("convertReferencesToPath", () => {
     test.each([

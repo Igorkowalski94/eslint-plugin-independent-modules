@@ -1,6 +1,6 @@
 import micromatch from "micromatch";
 
-import { convertReferencesToPath } from "./CconvertReferencesToPath";
+import { convertReferencesToPath } from "./convertReferencesToPath";
 import { Pattern } from "../validateModule.types";
 
 interface ValidateImportPathProps {
