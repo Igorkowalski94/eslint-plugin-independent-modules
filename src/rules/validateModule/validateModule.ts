@@ -33,6 +33,13 @@ export const validateModule = ESLintUtils.RuleCreator(
             CallExpression(node): void {
                 handleCallExpression(node, context);
             },
+            ExportAllDeclaration(node): void {
+                validateImport({
+                    importPath: node.source.value,
+                    context,
+                    node,
+                });
+            },
         };
     },
 });

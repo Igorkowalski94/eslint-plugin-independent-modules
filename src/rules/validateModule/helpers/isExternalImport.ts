@@ -1,10 +1,9 @@
 import fs from "fs";
-import { sep } from "path";
+
+import { getFullImportPathExternal } from "./getFullImportPathExternal";
 
 export const isExternalImport = (importPath: string, cwd: string): boolean => {
-    const importPathWithSystemSep = importPath.replace(/(\/)/g, sep);
+    const fullImportPathExternal = getFullImportPathExternal(importPath, cwd);
 
-    const nodePath = `${cwd}${sep}node_modules${sep}${importPathWithSystemSep}`;
-
-    return fs.existsSync(nodePath);
+    return fs.existsSync(fullImportPathExternal);
 };

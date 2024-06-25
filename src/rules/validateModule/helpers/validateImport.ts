@@ -13,6 +13,7 @@ export interface ValidateImportProps {
     node:
         | TSESTree.ImportDeclaration
         | TSESTree.ExportNamedDeclaration
+        | TSESTree.ExportAllDeclaration
         | TSESTree.CallExpression;
 }
 

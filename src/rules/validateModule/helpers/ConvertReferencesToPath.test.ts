@@ -1,6 +1,6 @@
-import { convertReferencesToPath } from "./ConvertReferencesToPath";
+import { convertReferencesToPath } from "./convertReferencesToPath";
 
-describe("ConvertReferencesToPath", () => {
+describe("convertReferencesToPath", () => {
     test.each([
         {
             filename: "features/Feature1/feature1.types.ts",

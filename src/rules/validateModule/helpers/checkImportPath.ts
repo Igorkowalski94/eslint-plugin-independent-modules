@@ -1,3 +1,5 @@
+import micromatch from "micromatch";
+
 import { extractReusableImportPatterns } from "./extractReusableImportPatterns";
 import { findModuleConfig } from "./findModuleConfig";
 import { isExternalImport } from "./isExternalImport";
@@ -38,10 +40,11 @@ export const checkImportPath = ({
     const isExternal = isExternalImport(importPath, cwd);
 
     if (isExternal) {
-        if (
-            allowImportsFromExtracted.includes(importPath) ||
-            allowExternalImports !== false
-        )
+        const isValidExternalImportPattern = allowImportsFromExtracted.some(
+            (p) => micromatch.every(importPath, p),
+        );
+
+        if (isValidExternalImportPattern || allowExternalImports !== false)
             return;
 
         throw getExternalImportError(moduleName, errorMessage);
