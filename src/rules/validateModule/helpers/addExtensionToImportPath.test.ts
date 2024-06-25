@@ -1,5 +1,7 @@
 import { addExtensionToImportPath } from "./addExtensionToImportPath";
 
+jest.mock("path", () => ({ sep: "\\" }));
+
 jest.mock("fs", () => ({
     existsSync: jest.fn((path) => {
         if (
