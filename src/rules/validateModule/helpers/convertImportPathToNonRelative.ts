@@ -1,6 +1,5 @@
 import path from "path";
 
-import { convertToSystemSep } from "./convertToSystemSep";
 import { removeCwdWithRootAndUnifySep } from "./removeCwdWithRootAndUnifySep";
 
 interface ConvertImportPathToNonRelativeProps {
@@ -18,9 +17,7 @@ export const convertImportPathToNonRelative = ({
 
     const dirname = path.dirname(filename);
 
-    const importPathWithSystemSep = convertToSystemSep(importPath);
-
-    const fullImportPath = path.resolve(dirname, importPathWithSystemSep);
+    const fullImportPath = path.resolve(dirname, path.join(importPath));
 
     return removeCwdWithRootAndUnifySep(fullImportPath, cwdWithRoot);
 };

@@ -1,19 +1,19 @@
 import { addExtensionToImportPath } from "./addExtensionToImportPath";
 
-jest.mock("path", () => ({ sep: "\\" }));
+jest.mock("path", () => ({ ...jest.requireActual("path"), sep: "\\" }));
 
 jest.mock("fs", () => ({
     existsSync: jest.fn((path) => {
         if (
             path ===
-            "C:\\Users\\user\\Desktop\\repo\\src\\features\\Feature1.testExt"
+            "C:\\Users\\user\\Desktop\\repo\\src\\features\\Feature2\\index.ts"
         ) {
             return true;
         }
 
         if (
             path ===
-            "C:\\Users\\user\\Desktop\\repo\\node_modules\\react\\test.testExt"
+            "C:\\Users\\user\\Desktop\\repo\\src\\features\\Feature1.testExt"
         ) {
             return true;
         }
@@ -37,12 +37,17 @@ describe("addExtensionToImportPath", () => {
         {
             importPath: "features/Feature2",
             extensions: undefined,
-            expected: "features/Feature2",
+            expected: "features/Feature2/index.ts",
         },
         {
-            importPath: "react/test",
-            extensions: [".testExt"],
-            expected: "react/test.testExt",
+            importPath: "react",
+            extensions: undefined,
+            expected: "react",
+        },
+        {
+            importPath: "styled-components/macro",
+            extensions: undefined,
+            expected: "styled-components/macro",
         },
     ])(
         "Should return correct value for %s",
@@ -52,7 +57,6 @@ describe("addExtensionToImportPath", () => {
                     importPath,
                     cwdWithRoot: "C:\\Users\\user\\Desktop\\repo\\src\\",
                     extensions,
-                    cwd: "C:\\Users\\user\\Desktop\\repo",
                 }),
             ).toEqual(expected);
         },

@@ -43,7 +43,6 @@ export const validateAll = ({
         importPath: importPathNonRelative,
         cwdWithRoot,
         extensions,
-        cwd,
     });
 
     checkImportPath({

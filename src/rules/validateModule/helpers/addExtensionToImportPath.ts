@@ -1,7 +1,6 @@
 import fs from "fs";
+import path from "path";
 
-import { convertToSystemSep } from "./convertToSystemSep";
-import { getFullImportPathExternal } from "./getFullImportPathExternal";
 import { FILE_EXTENSIONS } from "../validateModule.consts";
 import { Config } from "../validateModule.types";
 
@@ -9,14 +8,12 @@ interface AddExtensionToImportPathProps {
     importPath: string;
     cwdWithRoot: string;
     extensions: Config["extensions"];
-    cwd: string;
 }
 
 export const addExtensionToImportPath = ({
     importPath,
     cwdWithRoot,
     extensions = [],
-    cwd,
 }: AddExtensionToImportPathProps): string => {
     const allExtensions = [...FILE_EXTENSIONS, ...extensions];
 
@@ -26,22 +23,21 @@ export const addExtensionToImportPath = ({
 
     if (isImportPathWithExtension) return importPath;
 
-    const importPathWithSystemSep = convertToSystemSep(importPath);
+    const fullImportPath = path.join(cwdWithRoot, importPath);
+    const fullImportPathIndex = path.join(fullImportPath, "index");
 
-    const fullImportPath = cwdWithRoot + importPathWithSystemSep;
-    const fullImportPathExternal = getFullImportPathExternal(importPath, cwd);
+    const importPathWithExtension = allExtensions.reduce<string | undefined>(
+        (acc, ext) => {
+            const isPathWithoutIndex = fs.existsSync(fullImportPath + ext);
+            if (isPathWithoutIndex) return (acc = importPath + ext);
 
-    let foundExtension = "";
+            const isPathWithIndex = fs.existsSync(fullImportPathIndex + ext);
+            if (isPathWithIndex) return (acc = `${importPath}/index${ext}`);
 
-    for (const extension of allExtensions) {
-        if (
-            fs.existsSync(fullImportPath + extension) ||
-            fs.existsSync(fullImportPathExternal + extension)
-        ) {
-            foundExtension = extension;
-            break;
-        }
-    }
+            return acc;
+        },
+        undefined,
+    );
 
-    return importPath + foundExtension;
+    return importPathWithExtension ?? importPath;
 };
