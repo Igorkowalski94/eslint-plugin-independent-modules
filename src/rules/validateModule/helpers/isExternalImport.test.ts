@@ -2,6 +2,8 @@ import fs from "fs";
 
 import { isExternalImport } from "./isExternalImport";
 
+jest.mock("path", () => ({ ...jest.requireActual("path"), sep: "\\" }));
+
 describe("isExternalImport", () => {
     it("should return true if import is external", () => {
         jest.spyOn(fs, "existsSync").mockImplementation(
