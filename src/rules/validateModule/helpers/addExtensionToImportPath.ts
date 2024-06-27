@@ -28,11 +28,11 @@ export const addExtensionToImportPath = ({
 
     const importPathWithExtension = allExtensions.reduce<string | undefined>(
         (acc, ext) => {
-            const isPathWithoutIndex = fs.existsSync(fullImportPath + ext);
-            if (isPathWithoutIndex) return (acc = importPath + ext);
-
             const isPathWithIndex = fs.existsSync(fullImportPathIndex + ext);
             if (isPathWithIndex) return (acc = `${importPath}/index${ext}`);
+
+            const isPathWithoutIndex = fs.existsSync(fullImportPath + ext);
+            if (isPathWithoutIndex) return (acc = importPath + ext);
 
             return acc;
         },
