@@ -56,7 +56,14 @@ describe("checkImportPath", () => {
                 filename: "",
                 importPath: "react",
             }),
-        ).not.toThrow(getExternalImportError("module", "error"));
+        ).not.toThrow(
+            getExternalImportError({
+                allowImportsFromExtracted: [],
+                filename: "",
+                importPath: "",
+                moduleName: "",
+            }),
+        );
     });
 
     test("Should not throw when isExternalImport and allowExternalImports === true", () => {
@@ -75,7 +82,14 @@ describe("checkImportPath", () => {
                 filename: "",
                 importPath: "react",
             }),
-        ).not.toThrow(getExternalImportError("module", "error"));
+        ).not.toThrow(
+            getExternalImportError({
+                allowImportsFromExtracted: [],
+                filename: "",
+                importPath: "",
+                moduleName: "",
+            }),
+        );
     });
 
     test("Should throw when isExternalImport and allowExternalImports === false and allowImportsFromExtracted do not includes importPath", () => {
@@ -94,7 +108,15 @@ describe("checkImportPath", () => {
                 filename: "",
                 importPath: "react",
             }),
-        ).toThrow(getExternalImportError("module", "error"));
+        ).toThrow(
+            getExternalImportError({
+                moduleName: "module",
+                importPath: "react",
+                filename: "",
+                errorMessage: "error",
+                allowImportsFromExtracted: [],
+            }),
+        );
     });
 
     test("Should not throw when isValidImportPath", () => {
@@ -113,7 +135,14 @@ describe("checkImportPath", () => {
                 filename: "",
                 importPath: "",
             }),
-        ).not.toThrow(getImportError("module", "error"));
+        ).not.toThrow(
+            getImportError({
+                allowImportsFromExtracted: [],
+                filename: "",
+                importPath: "",
+                moduleName: "",
+            }),
+        );
     });
 
     test("Should throw when !isValidImportPath", () => {
@@ -132,6 +161,14 @@ describe("checkImportPath", () => {
                 filename: "",
                 importPath: "",
             }),
-        ).toThrow(getImportError("module", "error"));
+        ).toThrow(
+            getImportError({
+                allowImportsFromExtracted: [],
+                filename: "",
+                importPath: "",
+                moduleName: "module",
+                errorMessage: "error",
+            }),
+        );
     });
 });

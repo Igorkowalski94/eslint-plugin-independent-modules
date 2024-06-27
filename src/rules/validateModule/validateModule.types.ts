@@ -17,4 +17,5 @@ export interface Config {
     extensions?: string[];
     reusableImportPatterns?: Record<string, Pattern[]>;
     modules: Module[];
+    debugMode?: boolean;
 }

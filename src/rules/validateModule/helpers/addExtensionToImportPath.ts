@@ -34,13 +34,13 @@ export const addExtensionToImportPath = ({
         fullImportPathIndex,
     } = getFullImportPathVariants({ importPath, cwdWithRoot, cwd });
 
-    const pathWithIndex = [
+    const fullImportPathsWithIndex = [
         fullImportPathIndex,
         fullImportPathExternalIndex,
         fullImportPathExternalTypesIndex,
     ];
 
-    const pathWithoutIndex = [
+    const fullImportPathsWithoutIndex = [
         fullImportPath,
         fullImportPathExternal,
         fullImportPathExternalTypes,
@@ -48,15 +48,18 @@ export const addExtensionToImportPath = ({
 
     const importPathWithExtension = allExtensions.reduce<string | undefined>(
         (acc, ext) => {
-            const isPathWithoutIndex = pathWithoutIndex.some((path) =>
-                fs.existsSync(path + ext),
+            const isImportPathWithoutIndex = fullImportPathsWithoutIndex.some(
+                (fullImportPathWithoutIndex) =>
+                    fs.existsSync(fullImportPathWithoutIndex + ext),
             );
-            if (isPathWithoutIndex) return (acc = importPath + ext);
+            if (isImportPathWithoutIndex) return (acc = importPath + ext);
 
-            const isPathWithIndex = pathWithIndex.some((path) =>
-                fs.existsSync(path + ext),
+            const isImportPathWithIndex = fullImportPathsWithIndex.some(
+                (fullImportPathWithIndex) =>
+                    fs.existsSync(fullImportPathWithIndex + ext),
             );
-            if (isPathWithIndex) return (acc = `${importPath}/index${ext}`);
+            if (isImportPathWithIndex)
+                return (acc = `${importPath}/index${ext}`);
 
             return acc;
         },

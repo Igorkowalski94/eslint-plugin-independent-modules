@@ -18,7 +18,7 @@ interface CheckImportPathProps {
 export const checkImportPath = ({
     importPath,
     filename,
-    config: { reusableImportPatterns, modules },
+    config: { reusableImportPatterns, modules, debugMode },
     cwd,
 }: CheckImportPathProps): void => {
     const moduleConfig = findModuleConfig(filename, modules);
@@ -47,7 +47,14 @@ export const checkImportPath = ({
         if (isValidExternalImportPattern || allowExternalImports !== false)
             return;
 
-        throw getExternalImportError(moduleName, errorMessage);
+        throw getExternalImportError({
+            moduleName,
+            errorMessage,
+            debugMode,
+            filename,
+            importPath,
+            allowImportsFromExtracted,
+        });
     }
 
     const isValidImportPath = validateImportPath({
@@ -58,5 +65,12 @@ export const checkImportPath = ({
 
     if (isValidImportPath) return;
 
-    throw getImportError(moduleName, errorMessage);
+    throw getImportError({
+        moduleName,
+        errorMessage,
+        debugMode,
+        filename,
+        importPath,
+        allowImportsFromExtracted,
+    });
 };
