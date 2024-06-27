@@ -13,7 +13,31 @@ jest.mock("fs", () => ({
 
         if (
             path ===
-            "C:\\Users\\user\\Desktop\\repo\\src\\features\\Feature1.testExt"
+            "C:\\Users\\user\\Desktop\\repo\\src\\features\\Feature1\\Feature1.testExt"
+        ) {
+            return true;
+        }
+
+        if (path === "C:\\Users\\user\\Desktop\\repo\\node_modules\\lib") {
+            return true;
+        }
+
+        if (
+            path ===
+            "C:\\Users\\user\\Desktop\\repo\\node_modules\\lib\\index.d.ts"
+        ) {
+            return true;
+        }
+
+        if (
+            path === "C:\\Users\\user\\Desktop\\repo\\node_modules\\@types\\lib"
+        ) {
+            return true;
+        }
+
+        if (
+            path ===
+            "C:\\Users\\user\\Desktop\\repo\\node_modules\\@types\\lib\\index.d.ts"
         ) {
             return true;
         }
@@ -25,14 +49,14 @@ jest.mock("fs", () => ({
 describe("addExtensionToImportPath", () => {
     test.each([
         {
-            importPath: "features/Feature1",
+            importPath: "features/Feature1/Feature1",
             extensions: [".testExt"],
-            expected: "features/Feature1.testExt",
+            expected: "features/Feature1/Feature1.testExt",
         },
         {
-            importPath: "features/Feature1.tsx",
+            importPath: "features/Feature1/Feature1.tsx",
             extensions: undefined,
-            expected: "features/Feature1.tsx",
+            expected: "features/Feature1/Feature1.tsx",
         },
         {
             importPath: "features/Feature2",
@@ -40,14 +64,24 @@ describe("addExtensionToImportPath", () => {
             expected: "features/Feature2/index.ts",
         },
         {
-            importPath: "react",
+            importPath: "lib",
             extensions: undefined,
-            expected: "react",
+            expected: "lib/index.d.ts",
         },
         {
-            importPath: "styled-components/macro",
+            importPath: "lib/index",
             extensions: undefined,
-            expected: "styled-components/macro",
+            expected: "lib/index.d.ts",
+        },
+        {
+            importPath: "@types/lib",
+            extensions: undefined,
+            expected: "@types/lib/index.d.ts",
+        },
+        {
+            importPath: "@types/lib/index",
+            extensions: undefined,
+            expected: "@types/lib/index.d.ts",
         },
     ])(
         "Should return correct value for %s",
@@ -60,6 +94,22 @@ describe("addExtensionToImportPath", () => {
                 .mockImplementationOnce(
                     () =>
                         `C:\\Users\\user\\Desktop\\repo\\src\\${importPath.replaceAll("/", "\\")}\\index`,
+                )
+                .mockImplementationOnce(
+                    () =>
+                        `C:\\Users\\user\\Desktop\\repo\\node_modules\\${importPath.replaceAll("/", "\\")}`,
+                )
+                .mockImplementationOnce(
+                    () =>
+                        `C:\\Users\\user\\Desktop\\repo\\node_modules\\${importPath.replaceAll("/", "\\")}\\index`,
+                )
+                .mockImplementationOnce(
+                    () =>
+                        `C:\\Users\\user\\Desktop\\repo\\node_modules\\@types\\${importPath.replaceAll("/", "\\")}`,
+                )
+                .mockImplementationOnce(
+                    () =>
+                        `C:\\Users\\user\\Desktop\\repo\\node_modules\\@types\\${importPath.replaceAll("/", "\\")}\\index`,
                 );
 
             expect(
@@ -67,6 +117,7 @@ describe("addExtensionToImportPath", () => {
                     importPath,
                     cwdWithRoot: "C:\\Users\\user\\Desktop\\repo\\src\\",
                     extensions,
+                    cwd: "C:\\Users\\user\\Desktop\\repo",
                 }),
             ).toEqual(expected);
 
