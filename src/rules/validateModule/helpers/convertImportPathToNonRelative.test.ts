@@ -56,6 +56,8 @@ describe("convertImportPathToNonRelative", () => {
                     cwdWithRoot,
                 }),
             ).toEqual(expected);
+
+            jest.restoreAllMocks();
         },
     );
 });

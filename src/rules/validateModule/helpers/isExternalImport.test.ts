@@ -4,6 +4,10 @@ import path from "path";
 import { isExternalImport } from "./isExternalImport";
 
 describe("isExternalImport", () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+
     it("should return true if import is external", () => {
         jest.spyOn(path, "join").mockImplementation(
             () => "C:\\Users\\user\\Desktop\\repo\\node_modules\\react",

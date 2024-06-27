@@ -1,3 +1,5 @@
+import path from "path";
+
 import { addExtensionToImportPath } from "./addExtensionToImportPath";
 
 jest.mock("fs", () => ({
@@ -50,6 +52,16 @@ describe("addExtensionToImportPath", () => {
     ])(
         "Should return correct value for %s",
         ({ importPath, extensions, expected }) => {
+            jest.spyOn(path, "join")
+                .mockImplementationOnce(
+                    () =>
+                        `C:\\Users\\user\\Desktop\\repo\\src\\${importPath.replaceAll("/", "\\")}`,
+                )
+                .mockImplementationOnce(
+                    () =>
+                        `C:\\Users\\user\\Desktop\\repo\\src\\${importPath.replaceAll("/", "\\")}\\index`,
+                );
+
             expect(
                 addExtensionToImportPath({
                     importPath,
@@ -57,6 +69,8 @@ describe("addExtensionToImportPath", () => {
                     extensions,
                 }),
             ).toEqual(expected);
+
+            jest.restoreAllMocks();
         },
     );
 });
