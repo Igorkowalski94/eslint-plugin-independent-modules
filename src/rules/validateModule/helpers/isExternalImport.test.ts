@@ -1,11 +1,13 @@
 import fs from "fs";
+import path from "path";
 
 import { isExternalImport } from "./isExternalImport";
 
-jest.mock("path", () => ({ ...jest.requireActual("path"), sep: "\\" }));
-
 describe("isExternalImport", () => {
     it("should return true if import is external", () => {
+        jest.spyOn(path, "join").mockImplementation(
+            () => "C:\\Users\\user\\Desktop\\repo\\node_modules\\react",
+        );
         jest.spyOn(fs, "existsSync").mockImplementation(
             (path) =>
                 path === "C:\\Users\\user\\Desktop\\repo\\node_modules\\react",
@@ -16,6 +18,9 @@ describe("isExternalImport", () => {
     });
 
     it("should return true if import is external from @types", () => {
+        jest.spyOn(path, "join").mockImplementation(
+            () => "C:\\Users\\user\\Desktop\\repo\\node_modules\\@types\\react",
+        );
         jest.spyOn(fs, "existsSync").mockImplementation(
             (path) =>
                 path ===
