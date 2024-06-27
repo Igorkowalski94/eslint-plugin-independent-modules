@@ -1,3 +1,4 @@
+import { convertReferencesToPath } from "./convertReferencesToPath";
 import { getDirnamePath } from "./getDirnamePath";
 import { getFamilyPath } from "./getFamilyPath";
 import { Module } from "../validateModule.types";
@@ -13,10 +14,14 @@ export const getDebugMessage = ({
     filename,
     importPath,
 }: GetDebugMessageProps): string => {
-    const referencesMode = allowImportsFromExtracted.reduce(
-        (acc, ref) => (acc = `${acc}${JSON.stringify(ref)}\n`),
-        "\nallowImportsFrom:\n",
-    );
+    const referencesMode = allowImportsFromExtracted.reduce((acc, pattern) => {
+        const newPattern = convertReferencesToPath({
+            pattern,
+            importPath,
+            filename,
+        });
+        return (acc = `${acc}${JSON.stringify(newPattern)}\n`);
+    }, "\nallowImportsFrom:\n");
 
     return `\n\nFile path   = "${filename}"\nImport path = "${importPath}"\n{family}    = "${getFamilyPath({ filename, importPath, pattern: "{family}" })}"\n{dirname}   = "${getDirnamePath(filename, "{dirname}")}"\n${referencesMode}`;
 };
