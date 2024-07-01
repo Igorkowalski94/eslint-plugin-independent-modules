@@ -32,10 +32,10 @@ export const checkImportPath = ({
         errorMessage,
     } = moduleConfig;
 
-    const allowImportsFromExtracted = extractReusableImportPatterns(
-        allowImportsFrom,
+    const allowImportsFromExtracted = extractReusableImportPatterns({
+        patterns: allowImportsFrom,
         reusableImportPatterns,
-    );
+    });
 
     const isExternal = isExternalImport(importPath, cwd);
 

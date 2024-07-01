@@ -1,47 +1,63 @@
 import { extractReusableImportPatterns } from "./extractReusableImportPatterns";
 import { getInvalidReusableImportPatternsKeyError } from "../errors/getInvalidReusableImportPatternsKeyError";
+import { getRecursionLimitError } from "../errors/getRecursionLimitError";
 import { Config } from "../validateModule.types";
 
 describe("extractReusableImportPatterns", () => {
     const reusableImportPatterns: Config["reusableImportPatterns"] = {
-        pattern1: ["test/**"],
-        pattern2: [["features/**", "!features/**/*.ts"], "helpers/**"],
+        notPrivateFilesAndFolders: [
+            "!(**/*.(types|consts|test|api|context|stories).(ts|tsx))",
+            "!(**/(hooks|helpers|c)/**)",
+        ],
+        globalHooks: [["hooks/**", "{notPrivateFilesAndFolders}"]],
+        pattern1: ["{pattern2}"],
+        pattern2: ["{pattern1}"],
     };
 
     test("Should return correct patterns when reusableImportPatterns keys exist", () => {
         expect(
-            extractReusableImportPatterns(
-                [
-                    "{pattern1}",
-                    ["{pattern1}"],
-                    "src/**",
-                    "{pattern2}",
-                    ["{pattern2}"],
-                ],
+            extractReusableImportPatterns({
+                patterns: ["{globalHooks}", ["{globalHooks}"]],
                 reusableImportPatterns,
-            ),
+            }),
         ).toEqual([
-            "test/**",
-            ["test/**"],
-            "src/**",
-            ["features/**", "!features/**/*.ts"],
-            "helpers/**",
-            ["features/**", "!features/**/*.ts", "helpers/**"],
+            [
+                "hooks/**",
+                "!(**/*.(types|consts|test|api|context|stories).(ts|tsx))",
+                "!(**/(hooks|helpers|c)/**)",
+            ],
+            [
+                "hooks/**",
+                "!(**/*.(types|consts|test|api|context|stories).(ts|tsx))",
+                "!(**/(hooks|helpers|c)/**)",
+            ],
         ]);
     });
 
+    test("Should throw recursion error", () => {
+        expect(() =>
+            extractReusableImportPatterns({
+                patterns: ["{pattern1}"],
+                reusableImportPatterns,
+            }),
+        ).toThrow(getRecursionLimitError(["{pattern1}"]));
+    });
+
     test("Should return patterns when reusableImportPatterns === undefined", () => {
-        expect(extractReusableImportPatterns(["test/**"], undefined)).toEqual([
-            "test/**",
-        ]);
+        expect(
+            extractReusableImportPatterns({
+                patterns: ["test/**"],
+                reusableImportPatterns: undefined,
+            }),
+        ).toEqual(["test/**"]);
     });
 
     test("Should return error when reusableImportPatterns keys do not exist", () => {
         expect(() =>
-            extractReusableImportPatterns(
-                ["{pattern3}"],
+            extractReusableImportPatterns({
+                patterns: ["{pattern3}"],
                 reusableImportPatterns,
-            ),
+            }),
         ).toThrow(getInvalidReusableImportPatternsKeyError("pattern3"));
     });
 });
